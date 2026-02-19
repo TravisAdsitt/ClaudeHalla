@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "claude-halla"
+version = "0.1.0"
+description = "MCP server for developer discovery inside an organization"
+requires-python = ">=3.11"
+dependencies = [
+    "mcp[cli]>=1.25,<2",
+    "aiosqlite>=0.20",
+    "ldap3>=2.9",
+    "PyJWT>=2.8",
+    "apscheduler>=3.10",
+    "pydantic>=2.6",
+    "pyyaml>=6.0",
+    "uvicorn>=0.29",
+    "starlette>=0.37",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "pytest-mock",
+    "freezegun",
+    "httpx",
+]
+
+[project.scripts]
+claude-halla = "claude_halla.main:run"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

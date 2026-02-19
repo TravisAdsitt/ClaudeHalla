@@ -1,0 +1,16 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: claude-halla
+  namespace: claude-halla
+  labels:
+    app: claude-halla
+spec:
+  to:
+    kind: Service
+    name: claude-halla
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

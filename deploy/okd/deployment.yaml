@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: claude-halla
+  namespace: claude-halla
+  labels:
+    app: claude-halla
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: claude-halla
+  template:
+    metadata:
+      labels:
+        app: claude-halla
+    spec:
+      containers:
+        - name: claude-halla
+          image: claude-halla:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: CLAUDE_HALLA_CONFIG
+              value: /config/config.yaml
+            - name: LDAP_BIND_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: claude-halla-secrets
+                  key: LDAP_BIND_PASSWORD
+            - name: CLAUDE_HALLA_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: claude-halla-secrets
+                  key: CLAUDE_HALLA_JWT_SECRET
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: config
+              mountPath: /config
+              readOnly: true
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: claude-halla-data
+        - name: config
+          configMap:
+            name: claude-halla-config

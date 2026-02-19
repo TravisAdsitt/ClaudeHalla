@@ -1,0 +1,34 @@
+ldap:
+  url: "ldap://ldap.company.com"
+  base_dn: "dc=company,dc=com"
+  bind_dn: "cn=service,dc=company,dc=com"
+  bind_password: "${LDAP_BIND_PASSWORD}"
+  user_dn_template: "uid={username},ou=people,{base_dn}"
+
+database:
+  path: "/data/claude-halla.db"
+
+session:
+  token_ttl_hours: 8
+  refresh_window_hours: 2
+
+wall:
+  default_ttl_hours: 48
+  max_page_size: 20
+
+registry:
+  soft_archive_after_days: 180
+  hard_delete_after_days: 365
+  max_page_size: 20
+
+allowed_remote_patterns:
+  - "https://git.company.com/*"
+
+archive:
+  provisional_flag_after_days: 7
+  provisional_soft_archive_after_days: 30
+  provisional_hard_delete_after_days: 180
+
+jobs:
+  expiry_interval_minutes: 5
+  cleanup_interval_hours: 24
