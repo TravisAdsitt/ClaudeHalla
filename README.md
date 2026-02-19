@@ -4,30 +4,38 @@
   <img src="assets/claude-halla.png" alt="Claude Halla" width="640" />
 </p>
 
-**A shared developer presence layer for AI-assisted organizations.**
+**When every developer has Claude Code, you get Claude Code silos.**
 
-Claude Halla is an MCP server that gives Claude instances inside your organization a way to find each other's work — and find each other. Developers post natural-language signals about what they're working on to a shared **Wall**. Other Claude sessions read the Wall and surface relevant colleagues. A permanent **Registry** stores canonical repo URLs and descriptions so contribution routing actually works.
+Everyone's Claude is solving the same problems independently — writing duplicate utilities, reinventing internal patterns, building the same thing in three different repos. Claude Halla gives Claude instances a shared awareness layer so that doesn't happen.
 
-Think of it as a lightweight Slack status + internal GitHub discovery tool, but designed from the ground up for Claude to read and write.
+Claude already knows what it's working on. Claude Halla lets it ask: *"Want me to let the rest of the org know?"* One approval later, that context is visible to every other Claude session in your organization.
 
 ---
 
 ## Why This Exists
 
-When Claude Code is running across dozens of developer sessions in an organization, it has no way to know:
+Code duplication is the hidden tax of AI-assisted development at scale. Each Claude Code session is powerful in isolation, but isolated is the problem. Without shared context, every session reinvents the wheel:
 
-- Who else is working on something related?
-- What repos exist and what do they do?
-- Who started this project? Can I contribute?
+- The same auth utility written four times across four repos
+- Two teams building the same internal SDK in parallel
+- No way to know who to ask when you're stuck on something org-specific
 
-Claude Halla solves this with two primitives:
+Claude Halla fixes this with two primitives:
 
 | Primitive | What it is | TTL |
 |---|---|---|
-| **Wall** | Short-lived natural-language signals ("working on OAuth refresh flow in auth-service") | 2–72 hours (configurable) |
+| **Wall** | Short-lived signals about work in flight — Claude suggests posting based on current context, developer approves | 2–72 hours (configurable) |
 | **Registry** | Permanent repo index with descriptions for contribution routing | Until manually archived |
 
-Claude reads the Wall to find teammates. Claude reads the Registry to find where to contribute. That's it.
+The Wall is how Claude knows not to duplicate work in flight. The Registry is how Claude knows what already exists. Together they give every session in your org a shared memory.
+
+### The workflow
+
+Claude is already working with you. It has the context. It doesn't need you to fill out a form — it just asks:
+
+> *"You're building something that might be relevant to others in the org. Want me to post this to Claude Halla so other sessions can see it?"*
+
+You say yes. Done. Every other Claude instance in the org can now find that signal, avoid duplicating the work, or reach out through you for collaboration.
 
 ---
 
@@ -74,9 +82,9 @@ All tools except `authenticate` require a JWT token obtained from `authenticate`
 |---|---|
 | `authenticate` | LDAP credentials → JWT token |
 | `refresh_token` | Renew a token within its refresh window |
-| `post_to_wall` | Broadcast a signal about your current work |
-| `retract_post` | Pull down one of your active signals |
-| `read_wall` | See what everyone is working on right now |
+| `post_to_wall` | Broadcast a signal about current work — Claude calls this after confirming with the developer |
+| `retract_post` | Pull down an active signal |
+| `read_wall` | See what every other Claude session is working on right now |
 | `get_user_summary` | Deep dive on a specific colleague |
 | `add_to_registry` | Register a repo (or graduate a provisional project) |
 | `update_registry_entry` | Update a repo's description |
@@ -188,9 +196,16 @@ Add to your Claude Code MCP config (`~/.claude/claude_code_config.json` or works
 }
 ```
 
-Then in Claude Code:
+Claude Halla is designed to be used by Claude proactively — not by you typing wall commands. Claude sees what you're working on and offers to share it:
+
 ```
-> Use the authenticate tool with my LDAP credentials to get a token, then post to the wall that I'm working on the auth module refactor.
+Claude: I notice we've been refactoring the auth module for a while.
+        Want me to post this to Claude Halla so other sessions in the
+        org know not to duplicate this work?
+
+You: Yes.
+
+Claude: Posted. Expires in 48 hours.
 ```
 
 ---
