@@ -330,7 +330,3 @@ claude-halla/
 ```
 
 ---
-
-## License
-
-Internal tool. All rights reserved.
