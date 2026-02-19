@@ -35,7 +35,7 @@ Claude is already working with you. It has the context. It doesn't need you to f
 
 > *"You're building something that might be relevant to others in the org. Want me to post this to Claude Halla so other sessions can see it?"*
 
-You say yes. Done. Every other Claude instance in the org can now find that signal, avoid duplicating the work, or reach out through you for collaboration.
+You say yes. Done. Every other Claude instance in the org can now find that signal, avoid duplicating the work, or reach out to you for collaboration.
 
 ---
 
